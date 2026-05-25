@@ -3,11 +3,14 @@ using Inventario_banco_api.Models;
 using Inventario_banco_api.Service;
 using Microsoft.AspNetCore.Mvc;
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace Inventario_banco_api.Controllers
 {
     // aqui tuviste un error a partir de ahora usa el MVC como  ruta debido a que components no es un controlador, es una carpeta que contiene componentes de React, entonces el controlador debe ser EquipoController y la ruta api/EquipoController
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize] // agregado para proteger el endpoint, solo usuarios autenticados pueden acceder a los endpoints de este controlador
     public class EquipoController : ControllerBase
     {
         private readonly IEquipoService _service;

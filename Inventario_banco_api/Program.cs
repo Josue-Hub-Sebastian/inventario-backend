@@ -2,6 +2,10 @@ using Inventario_banco_api.Repository;
 using Inventario_banco_api.Repository.RepoIMPL;
 using Inventario_banco_api.Service;
 using Inventario_banco_api.Service.ServiceImpl;
+//agregago estas importaciones junto al paquete nuget de Microsoft.AspNetCore.Authentication.JwtBearer y Microsoft.IdentityModel.Tokens para la autenticacion con JWT version 8.0.19
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +17,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IEquipoRepository, EquipoRepositoryIMPL>();
 builder.Services.AddScoped<IEquipoService, EquipoServiceIMPL>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepositoryIMPL>();
+builder.Services.AddScoped<IUsuarioService, UsuarioServiceIMPL>();
 
 
 builder.Services.AddCors(options =>
@@ -22,6 +28,22 @@ builder.Services.AddCors(options =>
                         .AllowAnyHeader()
                         .AllowAnyMethod());
 });
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    });
 
 var app = builder.Build();
 app.UseCors("AllowAngular");
@@ -35,6 +57,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
