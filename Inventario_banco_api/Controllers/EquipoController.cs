@@ -326,6 +326,13 @@ namespace Inventario_banco_api.Controllers
             });
         }
 
+        [HttpGet("buscar")]
+        public IActionResult buscar([FromQuery] string? texto, [FromQuery] string? estado, [FromQuery] string? ubicacion)
+        {
+            var resultado = _service.buscar(texto, estado, ubicacion);
+            return Ok(resultado);
+        }
+
 
 
 

@@ -19,7 +19,7 @@ builder.Services.AddScoped<IEquipoRepository, EquipoRepositoryIMPL>();
 builder.Services.AddScoped<IEquipoService, EquipoServiceIMPL>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepositoryIMPL>();
 builder.Services.AddScoped<IUsuarioService, UsuarioServiceIMPL>();
-
+builder.Services.AddHttpClient<PythonService>();
 
 builder.Services.AddCors(options =>
 {

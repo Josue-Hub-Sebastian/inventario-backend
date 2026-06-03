@@ -37,5 +37,10 @@ namespace Inventario_banco_api.Service.ServiceImpl
         {
             _repository.registrar(equipo);
         }
+
+        public List<Equipo> buscar(string texto, string estado, string ubicacion)
+        {
+            return _repository.buscar(texto, estado, ubicacion);
+        }
     }
 }

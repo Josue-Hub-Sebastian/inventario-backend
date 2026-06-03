@@ -9,6 +9,7 @@ namespace Inventario_banco_api.Repository
         Equipo buscarPorId(int id);
         void actualizar (Equipo equipo);
         void eliminar (int id);
+        List<Equipo> buscar(string texto, string estado, string ubicacion);
 
     }
 }

@@ -178,5 +178,40 @@ namespace Inventario_banco_api.Repository.RepoIMPL
 
             }
         }
+
+        // Metodo de búsqueda de equipos en la base de datos utilizando un procedimiento almacenado llamado "sp_BuscarEquipos". Este método permite buscar equipos por texto, estado y ubicación.
+        public List<Equipo> buscar(string texto, string estado, string ubicacion)
+        {
+            List<Equipo> lista = new List<Equipo>();
+            using (SqlConnection cn = new SqlConnection(_config.GetConnectionString("cadenaSQL")))
+            {
+                SqlCommand cmd = new SqlCommand("sp_BuscarEquipos", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@Texto", string.IsNullOrEmpty(texto) ? DBNull.Value : texto);
+                cmd.Parameters.AddWithValue("@Estado", string.IsNullOrEmpty(estado) ? DBNull.Value : estado);
+                cmd.Parameters.AddWithValue("@Ubicacion", string.IsNullOrEmpty(ubicacion) ? DBNull.Value : ubicacion);
+
+                cn.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    lista.Add(new Equipo()
+                    {
+                        Id = Convert.ToInt32(dr["Id"]),
+                        CodigoPatrimonial = dr["CodigoPatrimonial"].ToString(),
+                        TipoEquipo = dr["TipoEquipo"].ToString(),
+                        Marca = dr["Marca"].ToString(),
+                        Modelo = dr["Modelo"].ToString(),
+                        NumeroSerie = dr["NumeroSerie"].ToString(),
+                        EstadoEquipo = dr["EstadoEquipo"].ToString(),
+                        Ubicacion = dr["Ubicacion"].ToString(),
+                        UsuarioAsignado = dr["UsuarioAsignado"].ToString(),
+                    });
+                }
+            }
+            return lista;
+        }
+
     }
 }
